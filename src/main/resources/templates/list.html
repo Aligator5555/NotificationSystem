@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Система оповещения 3728</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<body>
+<div class="container-fluid px-0" style="background: rgba(14,14,14,0.7)">
+    <div class="d-flex gap-2 align-items-center p-2">
+        <a href="/" class="btn btn-outline-danger">Тревоги</a>
+        <a href="/list" class="btn btn-outline-info">Абоненты</a>
+        <a type="button" class="btn btn-outline-success">Мониторинг</a>
+        <button type="button" class="btn btn-outline-primary">Архив</button>
+        <button type="button" class="btn btn-outline-warning">Журнал</button>
+    </div>
+</div>
+
+<div class="container-fluid px-0">
+    <div class="d-flex gap-2 align-items-center p-2">
+        <h1>Список абонентов</h1>
+    </div>
+</div>
+<div class="container-fluid px-0">
+    <div class="d-flex gap-2 align-items-center p-2">
+        <a href="/addContact" class="btn btn-success">Добавить абонента</a>
+    </div>
+</div>
+<div class="container-fluid">
+        <div class="row">
+            <div class="col-8">
+                <table class="table table-dark table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">№</th>
+                        <th scope="col">Подр</th>
+                        <th scope="col">Звание</th>
+                        <th scope="col">Фамилия</th>
+                        <th scope="col">Телефон</th>
+                        <th scope="col">Уд</th>
+                        <th scope="col">Изм</th>
+                        <th scope="col">вкл/выкл</th>
+                    </tr>
+                    </thead>
+                    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+                    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+                    <tbody>
+                    <tr th:each="listSubscribers1, stat : ${listSubscribers}">
+                        <th th:text="${stat.count}" >1</th>
+                        <td th:text="${listSubscribers1.division}">Оповещение</td>
+                        <td th:text="${listSubscribers1.rankValue}" >"Сбор"</td>
+                        <td th:text="${listSubscribers1.family}">Оповещение Прд РЦ СУС </td>
+                        <td th:text="${listSubscribers1.phoneNumber}">-</td>
+                        <td><a th:href="@{/deleteContact/{id}(id=${listSubscribers1.id})}"
+                               onclick="return confirm('Вы уверены, что хотите удалить этот контакт?');"
+                               type="button"><img src="/img/Минус.png"  width="20" height="20" style="vertical-align: middle;
+                                margin-right: 5px;"></a>
+                        </td>
+                        <td>
+                            <a th:href="@{/edit/{id}(id=${listSubscribers1.id})}" class="me-2">
+                                <i class="fas fa-pencil-alt"></i> <span class="d-none d-sm-inline">
+                                <img src="/img/Обновить.png"  width="20" height="20" style="vertical-align: middle;
+                                margin-right: 5px;">
+                            </span>
+                            </a>
+                        </td>
+                        <!-- Колонка вкл/выкл -->
+                        <td>
+                            <form th:action="@{/toggle-enabled}" method="post">
+                                <input type="hidden" name="id" th:value="${listSubscribers1.id}">
+                                <label>
+                                    <input type="checkbox"
+                                           name="enabled"
+                                           th:checked="${listSubscribers1.enabled}"
+                                           onchange="this.form.submit()"
+                                           style="width: 18px; height: 18px;">
+                                </label>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-2">
+                <div class="container-fluid px-0">
+                    <div class="d-flex gap-2 align-items-center p-2">
+                        <a href="/saveSignal" class="btn btn-warning">Сформировать список сигналов для оповещения></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                <table class="table table-dark table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">№</th>
+                        <th scope="col">Название</th>
+                        <th scope="col">Уд</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="signal, stat : ${signals}">
+                        <td th:text="${stat.count}"></td>
+                        <td th:text="${signal.nameSignal}"></td>
+                        <td>
+                            <a th:href="@{/deleteSignal/{id}(id=${signal.id})}"
+                               onclick="return confirm('Вы уверены, что хотите удалить этот сигнал?');">
+                                <img src="/img/Минус.png" width="20" height="20"
+                                     style="vertical-align: middle; margin-right: 5px;">
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
+</body>
+</html>

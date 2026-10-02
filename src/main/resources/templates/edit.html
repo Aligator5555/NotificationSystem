@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Система оповещения 3728</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<body>
+<div class="container-fluid px-0" style="background: rgba(14,14,14,0.7)">
+    <div class="d-flex gap-2 align-items-center p-2">
+        <a href="/" class="btn btn-outline-danger">Тревоги</a>
+        <a href="/list" class="btn btn-outline-info">Абоненты</a>
+        <a type="button" class="btn btn-outline-success">Мониторинг</a>
+        <button type="button" class="btn btn-outline-primary">Архив</button>
+        <button type="button" class="btn btn-outline-warning">Журнал</button>
+    </div>
+</div>
+<!-- Форма ввода -->
+<section class="text-center text-lg-start">
+    <!-- Jumbotron -->
+    <div class="container py-4" >
+        <div class="row g-0 align-items-center" >
+            <div class="col" >
+                <div class="card cascading-right">
+                    <div class="card-body p-5 shadow-5 text-center" style= " background-color: rgba(0,0,0,0.87);">
+                        <h2 class="fw-bold mb-5" style="color: white">Обновить абонента</h2>
+                        <form th:action="@{/edit}"
+                              method="post"
+                              th:object="${subscriber}"
+                              style="color: white;">
+
+                            <!-- Скрытое поле с ID, чтобы Spring знал, какой объект обновлять -->
+                            <input type="hidden" th:field="*{id}" />
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div data-mdb-input-init class="form-outline">
+                                        <input type="text" th:field="*{division}" id="form3Example1" class="form-control" required />
+                                        <label class="form-label" for="form3Example1">Подразделение</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div data-mdb-input-init class="form-outline">
+                                        <input type="text" th:field="*{rankValue}" id="form3Example2" class="form-control" required />
+                                        <label class="form-label" for="form3Example2">Звание</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div data-mdb-input-init class="form-outline">
+                                        <input type="text" th:field="*{family}" id="form3Example3" class="form-control" required />
+                                        <label class="form-label" for="form3Example3">Фамилия и инициалы</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div data-mdb-input-init class="form-outline">
+                                        <input type="text" th:field="*{phoneNumber}" id="form3Example4" class="form-control" required />
+                                        <label class="form-label" for="form3Example4">Номер телефона</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit"
+                                    data-mdb-button-init data-mdb-ripple-init
+                                    class="btn btn-primary btn-block mb-4"
+                                    style="margin-top: 50px; background-color: #c82333; font-size: 20px;">
+                                Сохранить изменения
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Jumbotron -->
+</section>
+<!-- Форма ввода -->
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
+</body>
+</html>

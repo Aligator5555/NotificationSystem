@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: NotificationSystem3728
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  notification-system3728:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/NotificationSystem3728?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      app.sounds.path: /data/sounds
+      ASTERISK_HOST: asterisk
+      ASTERISK_PORT: "5038"
+      ASTERISK_USER: admin
+      ASTERISK_PASS: adminpassword
+    volumes:
+      - asterisk_sounds:/var/lib/asterisk/sounds
+
+  asterisk:
+    image: asterisk/asterisk:latest
+    container_name: asterisk
+    volumes:
+      - asterisk_sounds:/var/lib/asterisk/sounds
+      - ./config/extensions.conf:/etc/asterisk/extensions.conf
+      - ./config/manager.conf:/etc/asterisk/manager.conf
+      - ./config/asterisk.conf:/etc/asterisk/asterisk.conf
+      - ./config/sip.conf:/etc/asterisk/sip.conf
+      - ./config/iax.conf:/etc/asterisk/iax.conf
+    ports:
+      - "5060:5060/udp"
+      - "10000-10010:10000-10010/udp"
+      - "5038:5038/tcp"
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Moscow
+      PUID: 1000
+      PGID: 1000
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+
+volumes:
+  mysql_data:
+  asterisk_sounds:
